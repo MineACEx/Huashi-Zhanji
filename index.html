@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>画师 · 起床战争战绩档案｜BEDWARS.STATS</title>
+<style>
+  :root{
+    --paper:#EDE4D2;
+    --paper-2:#F8F3E6;
+    --white:#FFFDF7;
+    --ink:#17130E;
+    --ink-2:#463C2E;
+    --ink-3:#8B7C66;
+    --red:#BF2E23;
+    --red-2:#E2513C;
+    --teal:#1A6A5C;
+    --gold:#B07C16;
+
+    --f-display:"Impact","Haettenschweiler","Arial Black","PingFang SC","Microsoft YaHei",sans-serif;
+    --f-body:"PingFang SC","Microsoft YaHei",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --f-mono:ui-monospace,"Consolas","Menlo",monospace;
+
+    --r-xl:62px;
+    --r-lg:44px;
+    --r-md:28px;
+    --r-sm:16px;
+    --hard:6px 7px 0 rgba(23,19,14,.15);
+    --hard-sm:3px 4px 0 rgba(23,19,14,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--f-body);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* 纸张颗粒 */
+  .grain{
+    position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='260' height='260' filter='url(%23n)' opacity='0.42'/></svg>");
+  }
+  .shell{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 30px}
+
+  /* ============ 顶栏 ============ */
+  .bar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(237,228,210,.92);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:2px solid var(--ink);
+  }
+  .bar-in{
+    max-width:1180px;margin:0 auto;padding:13px 30px;
+    display:flex;align-items:center;gap:20px;
+  }
+  .logo{
+    font-family:var(--f-mono);font-size:12.5px;font-weight:700;
+    letter-spacing:.16em;white-space:nowrap;display:flex;align-items:center;gap:9px;
+  }
+  .logo i{
+    display:grid;place-items:center;width:23px;height:23px;font-style:normal;
+    background:var(--ink);color:var(--paper-2);font-size:12px;
+    border-radius:7px;corner-shape:squircle;
+  }
+  .bar nav{margin-left:auto;display:flex;gap:20px;font-size:13.5px}
+  .bar nav a{color:var(--ink-2);text-decoration:none;padding-bottom:2px;border-bottom:1.5px solid transparent;transition:.22s}
+  .bar nav a:hover{color:var(--ink);border-bottom-color:var(--red)}
+  .live{
+    display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);
+    font-size:11px;letter-spacing:.08em;padding:6px 13px;
+    background:var(--red);color:#fff;white-space:nowrap;
+    border-radius:100px;box-shadow:var(--hard-sm);
+  }
+  .live b{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.5s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+  /* ============ HERO ============ */
+  .hero{
+    display:grid;grid-template-columns:1.32fr .8fr;gap:56px;
+    padding:66px 0 42px;align-items:start;
+  }
+  .kicker{
+    font-family:var(--f-mono);font-size:11.5px;letter-spacing:.24em;
+    color:var(--red);margin-bottom:22px;display:flex;align-items:center;gap:10px;
+  }
+  .kicker::after{content:"";flex:1;height:1.5px;background:repeating-linear-gradient(90deg,var(--ink) 0 6px,transparent 6px 11px);opacity:.45}
+  .giant{
+    font-family:var(--f-display);font-weight:900;
+    font-size:clamp(104px,17vw,208px);line-height:.78;letter-spacing:-.055em;
+    margin-left:-.055em;color:var(--ink);
+  }
+  .giant em{font-style:normal;position:relative;display:inline-block}
+  .giant em::after{
+    content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;height:.055em;
+    background:var(--red);transform:rotate(-1.2deg);
+  }
+  .alias{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+  .chip{
+    font-size:13px;padding:6px 15px;background:var(--white);
+    border:1.5px solid var(--ink);border-radius:100px;
+    box-shadow:var(--hard-sm);white-space:nowrap;
+  }
+  .chip.hot{background:var(--red);color:#fff;border-color:var(--ink);font-weight:700}
+  .lede{
+    margin-top:28px;font-size:16.5px;line-height:1.85;color:var(--ink-2);max-width:46ch;
+  }
+  .lede b{background:linear-gradient(transparent 62%,rgba(191,46,35,.26) 62%);font-weight:700;color:var(--ink)}
+  .lede .strike{text-decoration:line-through;text-decoration-thickness:2px;color:var(--ink-3)}
+
+  .hero-r{position:relative;padding-top:6px}
+  .exhibit{
+    background:var(--white);padding:11px 11px 0;
+    border:2px solid var(--ink);border-radius:var(--r-lg);
+    corner-shape:squircle;
+    box-shadow:calc(6px + var(--sg,0) * 8px) calc(7px + var(--sg,0) * 9px) 0 rgba(23,19,14,.15);
+    transform:perspective(900px)
+              rotateX(calc(var(--my,0) * -7deg))
+              rotateY(calc(var(--mx,0) * 9deg))
+              rotate(calc(1.6deg - var(--sh,0) * 1.6deg))
+              translate3d(0,calc(var(--sh,0) * -8px),0)
+              scale(calc(1 + var(--sh,0) * .022));
+    will-change:transform;
+  }
+  .exhibit img{
+    transform:scale(calc(1 + var(--sh,0) * .055));
+    will-change:transform;
+  }
+  .exhibit img{display:block;width:100%;aspect-ratio:1;object-fit:cover;
+    border-radius:var(--r-md);corner-shape:squircle;will-change:transform}
+  .exhibit figcaption{
+    font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;
+    color:var(--ink-3);padding:12px 4px 14px;text-align:center;
+  }
+  .stamp{
+    position:absolute;right:-16px;top:-14px;width:104px;height:104px;
+    border:3.5px solid var(--red);border-radius:50%;
+    display:grid;place-items:center;text-align:center;
+    font-family:var(--f-display);font-size:17px;line-height:1.05;letter-spacing:.06em;
+    color:var(--red);transform:rotate(-13deg);opacity:.92;
+    background:rgba(237,228,210,.55);z-index:3;
+  }
+  .stamp::after{
+    content:"";position:absolute;inset:6px;border:1.5px solid var(--red);
+    border-radius:50%;opacity:.6;
+  }
+
+  /* ============ 段位横幅 ============ */
+  .tier{
+    --sh:0;
+    background:var(--ink);color:var(--paper-2);
+    border-radius:var(--r-xl);corner-shape:squircle;
+    padding:26px 40px;margin:14px 0 10px;
+    display:flex;align-items:center;gap:30px;flex-wrap:wrap;
+    box-shadow:calc(6px + var(--sh) * 9px) calc(7px + var(--sh) * 10px) 0 rgba(23,19,14,.15);
+    transform:translate3d(0,calc(var(--sh) * -5px),0) scale(calc(1 + var(--sh) * .008));
+    will-change:transform;
+  }
+  .tier .val{transform:scale(calc(1 + var(--sh) * .05));transform-origin:0 50%;will-change:transform}
+  .tier .lab{font-family:var(--f-mono);font-size:11px;letter-spacing:.22em;opacity:.6}
+  .tier .val{
+    font-family:var(--f-display);font-size:clamp(30px,4.4vw,46px);
+    letter-spacing:.04em;color:#F3C64E;
+  }
+  .tier .div{width:1.5px;height:36px;background:rgba(255,255,255,.22)}
+  .tier .note{font-size:13.5px;opacity:.72;margin-left:auto;text-align:right;line-height:1.6}
+
+  /* ============ 段落头 ============ */
+  section{padding:64px 0 6px}
+  .head{display:flex;align-items:baseline;gap:16px;margin-bottom:34px;flex-wrap:wrap;
+    border-bottom:2px solid var(--ink);padding-bottom:14px}
+  .head .idx{
+    font-family:var(--f-mono);font-size:12px;font-weight:700;color:var(--red);letter-spacing:.14em;
+  }
+  .head h2{
+    font-family:var(--f-display);font-weight:900;
+    font-size:clamp(30px,4.6vw,50px);line-height:1;letter-spacing:-.02em;
+  }
+  .head p{margin-left:auto;font-size:12.5px;color:var(--ink-3);font-family:var(--f-mono);letter-spacing:.04em}
+
+  /* ============ 战绩报表 ============ */
+  .ledger{border-top:1.5px solid rgba(23,19,14,.18)}
+  .lrow{
+    --sh:0;
+    position:relative;
+    display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+    padding:22px 6px;border-bottom:1.5px solid rgba(23,19,14,.18);
+    transform:translate3d(calc(var(--sh) * 16px),0,0);
+    background:rgba(255,253,247,calc(var(--sh) * .9));
+    will-change:transform;
+  }
+  .lrow::before{
+    content:"";position:absolute;left:0;top:8px;bottom:8px;
+    width:calc(var(--sh) * 4px);background:var(--red);border-radius:2px;
+    opacity:calc(var(--sh) * 1);
+  }
+  .lrow .lnum{
+    transform:scale(calc(1 + var(--sh) * .075));
+    transform-origin:100% 50%;will-change:transform;
+  }
+  .lrow .lname .cn{
+    color:rgb(calc(23 + var(--sh) * 130), calc(19 - var(--sh) * 12), calc(14 - var(--sh) * 10));
+  }
+  .lrow .lname .tag{
+    transform:scale(calc(1 + var(--sh) * .12)) rotate(calc(var(--sh) * -4deg));
+    transform-origin:50% 50%;
+  }
+  .lname{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .lname .cn{font-size:17px;font-weight:700;letter-spacing:.02em}
+  .lname .en{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase}
+  .lname .tag{
+    font-size:11px;padding:2px 9px;background:var(--red);color:#fff;
+    border-radius:100px;font-weight:700;letter-spacing:.04em;
+  }
+  .lnum{
+    font-family:var(--f-display);font-size:clamp(34px,4.6vw,54px);
+    line-height:1;letter-spacing:-.02em;text-align:right;white-space:nowrap;
+  }
+  .lnum small{font-family:var(--f-mono);font-size:.36em;color:var(--ink-3);margin-left:5px;letter-spacing:0}
+  .lsub{grid-column:1/-1;font-size:13px;color:var(--ink-3);margin-top:-10px}
+  .lsub b{color:var(--red);font-weight:700}
+
+  /* ============ 图表 ============ */
+  .chart-wrap{
+    --sh:0;
+    background:var(--white);border:2px solid var(--ink);
+    border-radius:var(--r-xl);corner-shape:squircle;
+    padding:26px 28px 20px;
+    box-shadow:calc(6px + var(--sh) * 8px) calc(7px + var(--sh) * 9px) 0 rgba(23,19,14,.15);
+    transform:translate3d(0,calc(var(--sh) * -4px),0);
+    will-change:transform;
+  }
+  .chart-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+  .chart-top h3{font-size:15.5px;font-weight:700}
+  .chart-top span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink-3)}
+  canvas{display:block;width:100%;height:290px}
+  .chart-foot{margin-top:14px;font-size:12.5px;color:var(--ink-3);display:flex;gap:22px;flex-wrap:wrap}
+  .chart-foot b{color:var(--ink)}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+  /* ============ 死因 ============ */
+  .causes{display:grid;gap:10px}
+  .cause{
+    --sh:0;
+    position:relative;
+    display:grid;grid-template-columns:52px 1fr 88px;gap:18px;align-items:center;
+    padding:16px 22px;
+    background:color-mix(in srgb,var(--white) calc(100% - var(--sh) * 100%),var(--ink));
+    border:1.5px solid var(--ink);border-radius:var(--r-md);corner-shape:squircle;
+    box-shadow:calc(3px + var(--sh) * 5px) calc(4px + var(--sh) * 6px) 0 rgba(23,19,14,.16);
+    transform:translate3d(calc(var(--sh) * 10px),0,0) scale(calc(1 + var(--sh) * .012));
+    will-change:transform;
+  }
+  .cause .n{
+    color:rgb(calc(139 + var(--sh) * 96), calc(124 + var(--sh) * 113), calc(102 + var(--sh) * 129));
+  }
+  .cause .nm{color:rgb(calc(23 + var(--sh) * 232), calc(19 + var(--sh) * 236), calc(14 + var(--sh) * 241))}
+  .cause .cnt{color:rgb(calc(23 + var(--sh) * 232), calc(19 + var(--sh) * 236), calc(14 + var(--sh) * 241))}
+  .cause .cnt em{color:rgb(calc(139 + var(--sh) * 60), calc(124 + var(--sh) * 75), calc(102 + var(--sh) * 90))}
+  .cause .track{background:rgba(23,19,14,calc(.1 + var(--sh) * .08))}
+  .cause .track i{
+    background:rgb(calc(23 + var(--sh) * 232), calc(19 + var(--sh) * 236), calc(14 + var(--sh) * 241));
+    transition:width 1.5s cubic-bezier(.16,.9,.24,1);
+  }
+  .cause:first-child .track i{background:rgb(calc(191 + var(--sh) * 35), calc(46 + var(--sh) * 35), calc(35 + var(--sh) * 25))}
+  .cause .nm i{
+    background:rgb(calc(23 + var(--sh) * 225), calc(19 + var(--sh) * 224), calc(14 + var(--sh) * 216));
+    color:rgb(calc(248 - var(--sh) * 225), calc(243 - var(--sh) * 224), calc(230 - var(--sh) * 216));
+  }
+  .cause .n{font-family:var(--f-display);font-size:24px;line-height:1;
+    transform:scale(calc(1 + var(--sh) * .18));transform-origin:50% 50%;will-change:transform}
+  .cause .body{min-width:0}
+  .cause .nm{font-size:14.5px;font-weight:600;margin-bottom:9px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .cause .nm i{
+    font-style:normal;font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;
+    padding:2px 8px;border-radius:100px;
+  }
+  .cause .track{height:9px;border-radius:100px;overflow:hidden}
+  .cause .track i{display:block;height:100%;width:0;border-radius:100px}
+  .cause:first-child .track i{background:var(--red)}
+  .cause .cnt{font-family:var(--f-mono);font-size:13.5px;text-align:right;font-weight:700}
+  .cause .cnt em{font-style:normal;font-size:10.5px;color:var(--ink-3);margin-left:3px;font-weight:400}
+
+  /* ============ 名场面 ============ */
+  .snaps{columns:3;column-gap:22px}
+  .snap{
+    break-inside:avoid;-webkit-column-break-inside:avoid;
+    margin:0 0 24px;background:var(--white);
+    border:2px solid var(--ink);border-radius:var(--r-lg);corner-shape:squircle;
+    padding:10px 10px 0;
+    box-shadow:calc(6px + var(--sh,0) * 7px) calc(7px + var(--sh,0) * 8px) 0 rgba(23,19,14,.16);
+    cursor:zoom-in;position:relative;
+    transform:rotate(calc(var(--rot,0deg) + var(--sh,0) * var(--rot,0deg) * -1))
+              translate3d(0,calc(var(--sh,0) * -9px),0)
+              scale(calc(1 + var(--sh,0) * .028));
+    will-change:transform;
+  }
+  .snap:nth-child(odd){--rot:-1.1deg}
+  .snap:nth-child(even){--rot:1.3deg}
+  .snap img{
+    display:block;width:100%;height:auto;
+    border-radius:var(--r-sm);corner-shape:squircle;
+    transform:scale(calc(1 + var(--sh,0) * .045)) rotate(calc(var(--sh,0) * -1.4deg));
+    filter:saturate(calc(1 + var(--sh,0) * .35)) contrast(calc(1 + var(--sh,0) * .06));
+    will-change:transform,filter;
+  }
+  .snap figcaption{
+    transform:translate3d(calc(var(--sh,0) * 5px),0,0);
+    will-change:transform;
+  }
+  .snap figcaption{
+    padding:12px 6px 14px;font-size:12.5px;line-height:1.5;color:var(--ink-2);
+    display:flex;flex-direction:column;gap:3px;
+  }
+  .snap figcaption b{font-size:13.5px;color:var(--ink);font-weight:700}
+  .snap figcaption small{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;color:var(--ink-3)}
+
+  /* ============ 作息 + 小票 ============ */
+  .two{display:grid;grid-template-columns:1.16fr .84fr;gap:26px;align-items:start}
+  .sched{
+    background:var(--white);border:2px solid var(--ink);
+    border-radius:var(--r-lg);corner-shape:squircle;
+    overflow:hidden;box-shadow:var(--hard);
+  }
+  .srow{
+    --sh:0;
+    display:grid;grid-template-columns:92px 1fr;gap:16px;
+    padding:16px 24px;border-bottom:1.5px solid rgba(23,19,14,.12);
+    font-size:14px;
+    background:color-mix(in srgb,transparent calc(100% - var(--sh) * 100%),var(--ink));
+    transform:translate3d(calc(var(--sh) * 6px),0,0);
+    will-change:transform;
+  }
+  .srow:last-child{border-bottom:0}
+  .srow p{color:rgb(calc(70 - var(--sh) * 20), calc(60 - var(--sh) * 18), calc(46 - var(--sh) * 14))}
+  .srow:hover p{color:var(--paper-2)}
+  .srow:hover p em{color:rgba(248,243,230,.62)}
+  .srow time{font-family:var(--f-mono);font-size:12.5px;font-weight:700;color:var(--teal);letter-spacing:.04em;padding-top:1px}
+  .srow p em{font-style:normal;color:var(--ink-3);font-size:13px}
+  .srow.hot p{font-weight:600}
+  .srow.hot time{color:var(--red)}
+  .srow:hover time{color:var(--gold)}
+  .srow.hot:hover time{color:#ffd7db}
+
+  .receipt{
+    background:var(--white);border:2px solid var(--ink);
+    border-radius:var(--r-md);corner-shape:squircle;
+    padding:24px 24px 20px;box-shadow:var(--hard);
+    font-family:var(--f-mono);transform:rotate(-1.6deg);
+    position:relative;
+  }
+  .receipt::before{
+    content:"✂ 沿虚线撕下";
+    position:absolute;top:-13px;left:18px;font-size:10px;letter-spacing:.06em;
+    color:var(--ink-3);background:var(--paper);padding:0 6px;
+  }
+  .r-title{font-size:14px;font-weight:700;letter-spacing:.1em;text-align:center;margin-bottom:4px}
+  .r-sub{font-size:10.5px;letter-spacing:.08em;color:var(--ink-3);text-align:center}
+  .r-hr{border:0;border-top:1.5px dashed rgba(23,19,14,.35);margin:16px 0}
+  .r-row{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;padding:6px 0;color:var(--ink-2)}
+  .r-row b{color:var(--ink)}
+  .r-row.bad b{color:var(--red)}
+  .r-total{display:flex;justify-content:space-between;font-size:15px;font-weight:700;padding-top:10px}
+  .r-foot{font-size:10.5px;line-height:1.9;color:var(--ink-3);text-align:center;letter-spacing:.04em}
+  .r-foot b{color:var(--red);letter-spacing:.16em}
+
+  /* ============ 组队卡 ============ */
+  .team-wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:start;margin-top:26px}
+  .side-note{
+    border-left:2.5px solid var(--red);padding:2px 0 2px 22px;
+    font-size:13.5px;line-height:1.95;color:var(--ink-2);
+  }
+  .side-note p{margin-bottom:13px}
+  .side-note p b{color:var(--ink);background:linear-gradient(transparent 62%,rgba(191,46,35,.28) 62%)}
+  .sn-title{font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;color:var(--red);margin-bottom:15px}
+  .team-card{
+    background:var(--white);border:2px solid var(--ink);
+    border-radius:var(--r-lg);corner-shape:squircle;
+    padding:26px 28px 22px;box-shadow:var(--hard);
+    font-family:var(--f-mono);max-width:600px;transform:rotate(-.7deg);
+  }
+  .t-title{font-size:14.5px;font-weight:800;letter-spacing:.16em;text-align:center}
+  .t-sub{font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);text-align:center;margin-top:7px}
+
+  /* ============ 语录 ============ */
+  .quotes{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .q{
+    --sh:0;
+    padding:28px 30px;
+    background:color-mix(in srgb,var(--paper-2) calc(100% - var(--sh) * 100%),var(--red));
+    border:2px solid var(--ink);border-radius:var(--r-lg);corner-shape:squircle;
+    box-shadow:calc(3px + var(--sh) * 6px) calc(4px + var(--sh) * 7px) 0 rgba(23,19,14,.16);
+    position:relative;
+    transform:translate3d(0,calc(var(--sh) * -4px),0) scale(calc(1 + var(--sh) * .015));
+    will-change:transform;
+  }
+  .q q{color:rgb(calc(23 + var(--sh) * 232), calc(19 + var(--sh) * 236), calc(14 + var(--sh) * 241))}
+  .q span{color:rgb(calc(139 + var(--sh) * 90), calc(124 + var(--sh) * 100), calc(102 + var(--sh) * 110))}
+  .q::before{color:rgb(calc(191 - var(--sh) * 60), calc(46 + var(--sh) * 190), calc(35 + var(--sh) * 195))}
+  .q q{
+    display:block;quotes:none;font-size:20px;font-weight:700;line-height:1.5;
+    letter-spacing:-.01em;
+  }
+  .q span{display:block;margin-top:12px;font-size:13px}
+  .q::before{
+    content:"“";position:absolute;left:16px;top:-6px;font-family:var(--f-display);
+    font-size:66px;line-height:1;
+    opacity:calc(.28 + var(--sh) * .34);
+  }
+
+  /* ============ 弹幕 ============ */
+  .wall{
+    --sh:0;
+    position:relative;height:420px;overflow:hidden;
+    transform:scale(calc(1 + var(--sh) * .006));
+    will-change:transform;
+    background:var(--white);border:2px solid var(--ink);
+    border-radius:var(--r-xl);corner-shape:squircle;
+    box-shadow:var(--hard);
+  }
+  .wall::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,var(--white) 0,transparent 46px,
+      transparent calc(100% - 46px),var(--white) 100%);
+  }
+  .dm{
+    position:absolute;left:100%;white-space:nowrap;
+    font-size:14.5px;font-weight:600;color:var(--ink);
+    animation:fly linear infinite;will-change:transform;
+  }
+  .dm.hot{color:var(--red)}
+  .dm.cool{color:var(--teal)}
+  @keyframes fly{from{transform:translateX(0)}to{transform:translateX(calc(-100vw - 100%))}}
+
+  /* ============ 结尾 ============ */
+  .outro{padding:96px 0 110px;text-align:center;position:relative}
+  .outro h2{
+    font-family:var(--f-display);font-weight:900;
+    font-size:clamp(38px,7.2vw,86px);line-height:.94;letter-spacing:-.035em;
+  }
+  .outro h2 span{color:var(--red)}
+  .outro .sub{margin-top:22px;font-size:16px;color:var(--ink-2);line-height:1.9}
+  .outro .sub b{background:linear-gradient(transparent 62%,rgba(191,46,35,.3) 62%)}
+
+  .btns{display:flex;gap:16px;justify-content:center;margin-top:40px;flex-wrap:wrap}
+  .btn{
+    position:relative;border:0;background:none;padding:0;cursor:pointer;
+    font-family:var(--f-body);font-size:15px;font-weight:700;letter-spacing:.02em;
+    filter:drop-shadow(4px 5px 0 rgba(23,19,14,.2));
+    transition:transform .18s,filter .18s;
+  }
+  .btn::before{
+    content:"";position:absolute;inset:0;background:var(--ink);
+    border-radius:100px;z-index:0;
+  }
+  .btn > span{
+    position:relative;z-index:1;display:block;
+    margin:2.5px;padding:15px 34px;background:var(--white);color:var(--ink);
+    border-radius:100px;
+  }
+  .btn.primary::before{background:var(--ink)}
+  .btn.primary > span{background:var(--red);color:#fff}
+  .btn{transition:filter .18s}
+  .btn > span{transition:none;will-change:transform,background,color}
+  .btn:hover > span{transform:scale(calc(1 + var(--bh,0) * .02))}
+  .btn:active{filter:drop-shadow(1px 1px 0 rgba(23,19,14,.2))}
+
+  /* ============ Lightbox ============ */
+  .lb{
+    position:fixed;inset:0;z-index:200;display:none;
+    background:rgba(23,19,14,.93);
+    align-items:center;justify-content:center;padding:40px;
+  }
+  .lb.on{display:flex;animation:fade .22s ease}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .lb figure{max-width:min(92vw,860px);max-height:90vh;display:flex;flex-direction:column;gap:16px}
+  .lb img{width:100%;height:auto;max-height:80vh;object-fit:contain;
+    border-radius:var(--r-lg);corner-shape:squircle;border:3px solid var(--paper-2)}
+  .lb figcaption{text-align:center;color:var(--paper-2);font-family:var(--f-mono);
+    font-size:12.5px;letter-spacing:.08em}
+  .lb-close{
+    position:absolute;top:22px;right:28px;width:42px;height:42px;
+    border:2px solid var(--paper-2);border-radius:50%;background:none;
+    color:var(--paper-2);font-size:22px;line-height:1;cursor:pointer;
+  }
+  .lb-close:hover{background:var(--paper-2);color:var(--ink)}
+
+  /* ============ Toast ============ */
+  .toast{
+    position:fixed;left:50%;bottom:34px;z-index:300;
+    transform:translate(-50%,24px);opacity:0;pointer-events:none;
+    background:var(--ink);color:var(--paper-2);
+    padding:14px 26px;font-size:14px;font-weight:600;
+    border-radius:100px;box-shadow:0 18px 40px -14px rgba(23,19,14,.7);
+    transition:all .32s cubic-bezier(.2,.8,.2,1);max-width:86vw;text-align:center;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  /* ============ 进场 ============ */
+  html.anim .rev{opacity:0;translate:0 26px;
+    transition:opacity .8s cubic-bezier(.2,.8,.2,1),translate .8s cubic-bezier(.2,.8,.2,1)}
+  html.anim .rev.in{opacity:1;translate:0 0}
+  /* hover 能动的东西一律不吃进场 transition，避免打断延迟 */
+  html.anim .rev.in.lrow,html.anim .rev.in.cause,html.anim .rev.in.snap,
+  html.anim .rev.in.q,html.anim .rev.in.srow,html.anim .rev.in.exhibit{
+    transition:opacity .8s cubic-bezier(.2,.8,.2,1);
+  }
+
+  /* ============ 响应式 ============ */
+  @media (max-width:1000px){
+    .hero{grid-template-columns:1fr;gap:48px;padding-top:48px}
+    .hero-r{max-width:320px}
+    .two{grid-template-columns:1fr}
+    .team-wrap{grid-template-columns:1fr;gap:26px}
+    .snaps{columns:2}
+    .quotes{grid-template-columns:1fr}
+    .bar nav{display:none}
+  }
+  @media (max-width:640px){
+    .shell{padding:0 18px}
+    .bar-in{padding:11px 18px}
+    .giant{font-size:clamp(88px,26vw,132px)}
+    .snaps{columns:1}
+    .cause{grid-template-columns:34px 1fr;gap:12px;padding:14px 16px}
+    .cause .cnt{grid-column:2;text-align:left;margin-top:-4px}
+    .tier{padding:22px 26px;gap:16px}
+    .tier .note{margin-left:0;text-align:left;width:100%}
+    .tier .div{display:none}
+    .lrow{padding:18px 4px;gap:12px}
+    .srow{grid-template-columns:74px 1fr;padding:14px 18px;font-size:13.5px}
+    canvas{height:240px}
+    .lb{padding:16px}
+    .stamp{width:84px;height:84px;font-size:14px;right:-6px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    html.anim .rev{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<header class="bar">
+  <div class="bar-in">
+    <span class="logo"><i>▦</i>BEDWARS.STATS</span>
+    <nav>
+      <a href="#ledger">战绩</a>
+      <a href="#chart">曲线</a>
+      <a href="#snaps">名场面</a>
+      <a href="#wall">弹幕</a>
+    </nav>
+    <span class="live"><b></b>直播中 · 3 人在看</span>
+  </div>
+</header>
+
+<main class="shell">
+
+  <!-- HERO -->
+  <section class="hero" style="padding-top:66px">
+    <div class="rev">
+      <div class="kicker">起床战争 · 全服档案 NO.0001</div>
+      <h1 class="giant">画<em>师</em></h1>
+      <div class="alias">
+        <span class="chip hot">职位 · 画主席</span>
+        <span class="chip">MC 起床战争主播</span>
+        <span class="chip">凌晨活跃用户</span>
+      </div>
+      <p class="lede">
+        起床战争打了 <b>三年</b>，技术稳定停留在「<b>知道床长什么样</b>」这个阶段。
+        对面排到他，都以为自己进了新手保护局；
+        而他的<span class="strike">粉丝团</span>总共 <b>3 个人</b>：两个是小号，剩下那个是来讨债的。
+      </p>
+    </div>
+
+    <div class="hero-r rev">
+      <figure class="exhibit">
+        <img src="img/avatar.jpg" alt="画师的头像">
+        <figcaption>证物 01 · 官方头像 · 满屏九只脚</figcaption>
+      </figure>
+      <div class="stamp">战绩<br>已核实</div>
+    </div>
+  </section>
+
+  <!-- 段位 -->
+  <div class="tier rev">
+    <div>
+      <div class="lab">当前段位</div>
+      <div class="val">傻屌 · 0 星</div>
+    </div>
+    <div class="div"></div>
+    <div>
+      <div class="lab">赛季状态</div>
+      <div class="val" style="font-size:22px;color:#F09C8E">保级失败</div>
+    </div>
+    <div class="note">
+      系统判定：该账号疑似被他人代打，<br>且代打的人也很菜。
+    </div>
+  </div>
+
+  <!-- 战绩 -->
+  <section id="ledger">
+    <div class="head rev">
+      <span class="idx">01 /</span>
+      <h2>核心战绩</h2>
+      <p>来源：全服赛季结算（本人拒签）</p>
+    </div>
+
+    <div class="ledger">
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">胜率</span><span class="en">Win Rate</span><span class="tag">还在跌</span></div>
+        <div class="lnum"><span data-tick="0.7" data-dec="1">0</span><small>%</small></div>
+        <div class="lsub">上赛季 0.8%，本赛季 0.7%，<b>稳定退步，从不失手</b>。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">击杀 / 死亡</span><span class="en">K / D</span></div>
+        <div class="lnum"><span data-tick="0.03" data-dec="2">0</span></div>
+        <div class="lsub">全服平均 1.42，他 0.03 —— <b>差了 47 倍，这是本事</b>。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">平均存活</span><span class="en">Avg. Survival</span><span class="tag">快</span></div>
+        <div class="lnum"><span data-tick="11">0</span><small>秒</small></div>
+        <div class="lsub">泡面熟得都比这慢，<b>脱裤子都比他活得久</b>。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">累计死亡</span><span class="en">Total Deaths</span></div>
+        <div class="lnum"><span data-tick="4812">0</span></div>
+        <div class="lsub">其中 <b>1,806 次是落地三秒内</b>，剩下的也都在三秒后。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">最长连胜</span><span class="en">Longest Streak</span></div>
+        <div class="lnum"><span data-tick="0">0</span><small>连胜</small></div>
+        <div class="lsub">系统复核三次，确认这不可能是人类操作。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">挖床数</span><span class="en">Beds Destroyed</span></div>
+        <div class="lnum"><span data-tick="3">0</span><small>张</small></div>
+        <div class="lsub">很努力，<b>但其中两张是队友的</b>。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">被单杀瞬间心率</span><span class="en">Peak BPM</span><span class="tag">危险</span></div>
+        <div class="lnum"><span data-tick="182">0</span><small>bpm</small></div>
+        <div class="lsub">医生说这叫惊吓反应，<b>他管这叫激情</b>。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">单局出汗量</span><span class="en">Sweat / Match</span></div>
+        <div class="lnum"><span data-tick="0.4" data-dec="1">0</span><small>L</small></div>
+        <div class="lsub">椅子已经坐出一个坑，<b>味道请自行想象</b>。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">WASD 键帽更换周期</span><span class="en">Keycap Cycle</span></div>
+        <div class="lnum"><span data-tick="3">0</span><small>天</small></div>
+        <div class="lsub">不是按坏的，<b>是攥手里攥化的</b>。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">每局说「啊？」次数</span><span class="en">Confused / Match</span></div>
+        <div class="lnum"><span data-tick="11">0</span><small>次</small></div>
+        <div class="lsub">开麦第一句永远是「啊？」，<b>第二句是「我怎么死了」</b>。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 图表 -->
+  <section id="chart">
+    <div class="head rev">
+      <span class="idx">02 /</span>
+      <h2>存活曲线</h2>
+      <p>近 7 局 · 单局存活秒数</p>
+    </div>
+    <div class="chart-wrap rev">
+      <div class="chart-top">
+        <h3>画主席单局存活时长</h3>
+        <span>UNIT: SECOND</span>
+      </div>
+      <canvas id="cv"></canvas>
+      <div class="chart-foot">
+        <span><i class="sw" style="background:#BF2E23"></i>画师</span>
+        <span><i class="sw" style="background:#17130E"></i>全服平均 240 秒</span>
+        <span>上面那条粗线是全服平均，<b>下面那排小方块是他</b>。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 死因 -->
+  <section>
+    <div class="head rev">
+      <span class="idx">03 /</span>
+      <h2>死因排行</h2>
+      <p>赛季累计 · 前五名</p>
+    </div>
+    <div class="causes">
+      <div class="cause rev">
+        <div class="n">01</div>
+        <div class="body">
+          <div class="nm">落地三秒被单杀 <i>经典</i></div>
+          <div class="track"><i data-w="100"></i></div>
+        </div>
+        <div class="cnt">1,806<em>次</em></div>
+      </div>
+      <div class="cause rev">
+        <div class="n">02</div>
+        <div class="body">
+          <div class="nm">床被挖了还在跟人单挑 <i>回头是岸</i></div>
+          <div class="track"><i data-w="67"></i></div>
+        </div>
+        <div class="cnt">1,204<em>次</em></div>
+      </div>
+      <div class="cause rev">
+        <div class="n">03</div>
+        <div class="body">
+          <div class="nm">搭桥搭一半自己掉虚空 <i>物理</i></div>
+          <div class="track"><i data-w="41"></i></div>
+        </div>
+        <div class="cnt">742<em>次</em></div>
+      </div>
+      <div class="cause rev">
+        <div class="n">04</div>
+        <div class="body">
+          <div class="nm">一口气买了 9 把木剑 <i>经济学</i></div>
+          <div class="track"><i data-w="28"></i></div>
+        </div>
+        <div class="cnt">508<em>次</em></div>
+      </div>
+      <div class="cause rev">
+        <div class="n">05</div>
+        <div class="body">
+          <div class="nm">出生点转身直接跳水里 <i>自由意志</i></div>
+          <div class="track"><i data-w="22"></i></div>
+        </div>
+        <div class="cnt">396<em>次</em></div>
+      </div>
+      <div class="cause rev">
+        <div class="n">06</div>
+        <div class="body">
+          <div class="nm">补刀前先去趟洗手间，回来人没了 <i>生理需求</i></div>
+          <div class="track"><i data-w="16"></i></div>
+        </div>
+        <div class="cnt">287<em>次</em></div>
+      </div>
+      <div class="cause rev">
+        <div class="n">07</div>
+        <div class="body">
+          <div class="nm">无线手柄没电，站原地被人慢慢打死 <i>后勤</i></div>
+          <div class="track"><i data-w="12"></i></div>
+        </div>
+        <div class="cnt">214<em>次</em></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 名场面 -->
+  <section id="snaps">
+    <div class="head rev">
+      <span class="idx">04 /</span>
+      <h2>名场面</h2>
+      <p>点击放大 · 建议配合弹幕食用</p>
+    </div>
+    <div class="snaps">
+      <figure class="snap rev" data-cap="开播前的最后一张体面照 · 09:54">
+        <img src="img/selfie.jpg" alt="画师开播前自拍">
+        <figcaption><b>开播前的最后一张体面照</b><small>SELFIE · 09:54</small></figcaption>
+      </figure>
+      <figure class="snap rev" data-cap="谁打得过你画师叔叔 😂">
+        <img src="img/meme1.jpg" alt="谁打得过你画师叔叔">
+        <figcaption><b>谁打得过你画师叔叔</b><small>直播切片</small></figcaption>
+      </figure>
+      <figure class="snap rev" data-cap="起床战争？无敌手。（指的是对面）">
+        <img src="img/meme2.jpg" alt="起床战争无敌手">
+        <figcaption><b>起床战争无敌手</b><small>（指对面）</small></figcaption>
+      </figure>
+      <figure class="snap rev" data-cap="起床战争？弱爆了啦！起床币 +9999">
+        <img src="img/meme3.jpg" alt="起床战争弱爆了啦">
+        <figcaption><b>起床战争？弱爆了啦</b><small>起床币 +9999</small></figcaption>
+      </figure>
+      <figure class="snap rev" data-cap="为高考静音——安静，主席要起来了">
+        <img src="img/meme4.jpg" alt="为高考静音">
+        <figcaption><b>为高考静音</b><small>安静，要起来了</small></figcaption>
+      </figure>
+      <figure class="snap rev" data-cap="官方头像：满屏九只脚，本喵不做任何评价">
+        <img src="img/avatar.jpg" alt="官方头像">
+        <figcaption><b>官方头像</b><small>九只脚 · 收藏癖</small></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 作息 + 小票 -->
+  <section>
+    <div class="head rev">
+      <span class="idx">05 /</span>
+      <h2>主席的一天</h2>
+      <p>据弹幕不完全统计 · 已做脱敏处理（其实没有）</p>
+    </div>
+    <div class="two">
+      <div class="sched rev">
+        <div class="srow"><time>14:00</time><p>起床，复盘录像，结论：「<em>这局不算，我卡了</em>」</p></div>
+        <div class="srow"><time>19:30</time><p>热身两把，被单杀 12 次<em>（热身环节结束）</em></p></div>
+        <div class="srow"><time>23:00</time><p>正式开播，标题永远是「<em>今天必上王者</em>」</p></div>
+        <div class="srow"><time>01:30</time><p>被单杀第 40 次，开始跟弹幕对线<em>（弹幕一共 3 个人）</em></p></div>
+        <div class="srow hot"><time>03:00</time><p>下播，扔下一句「我去办点事」<em>—— 懂的都懂</em></p></div>
+        <div class="srow hot"><time>03:47</time><p>城中村巷子口，现金结算，不开票<em>（详见右侧凭证）</em></p></div>
+        <div class="srow hot"><time>04:05</time><p>被服务人员认出来：「<em>你是不是那个起床战争的？</em>」</p></div>
+        <div class="srow hot"><time>04:09</time><p>当场社死，加价 50 要求对方别说<em>（对方收了钱，转头就说了）</em></p></div>
+        <div class="srow"><time>08:10</time><p>回到出租屋，先洗个澡，再发朋友圈「凌晨的思考」<em>（其实在想怎么删记录）</em></p></div>
+        <div class="srow"><time>09:00</time><p>发朋友圈「早起的鸟儿有虫吃」<em>（配图是窗帘）</em></p></div>
+      </div>
+
+      <div class="receipt rev">
+        <div class="r-title">夜 间 消 费 凭 证</div>
+        <div class="r-sub">NO. 0001 · 现金支付 · 不开发票</div>
+        <hr class="r-hr">
+        <div class="r-row"><span>03:31 打车 · 城中村</span><b>¥ 18</b></div>
+        <div class="r-row bad"><span>03:47 服务费 · 标准套餐</span><b>¥ 200</b></div>
+        <div class="r-row"><span>03:52 矿泉水 ×1</span><b>¥ 3</b></div>
+        <div class="r-row bad"><span>04:09 封口费</span><b>¥ 50</b></div>
+        <div class="r-row"><span>04:40 打车回家</span><b>¥ 22</b></div>
+        <hr class="r-hr">
+        <div class="r-total"><span>合计</span><b>¥ 293</b></div>
+        <hr class="r-hr">
+        <div class="r-foot">
+          服务态度：★★★★★<br>
+          备注：下次还来<br>
+          <b>—— 本凭证仅供娱乐，请勿外传 ——</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 老主顾档案 -->
+  <section>
+    <div class="head rev">
+      <span class="idx">06 /</span>
+      <h2>老主顾档案</h2>
+      <p>该客户已被列入黑名单 · 理由见备注</p>
+    </div>
+
+    <div class="two">
+      <div class="receipt rev" style="transform:rotate(1.2deg)">
+        <div class="r-title" style="font-size:15px">服 务 评 价 单</div>
+        <div class="r-sub">编号 C-047 · 服务方填写</div>
+        <hr class="r-hr">
+        <div class="r-row"><span>准时</span><b>★★★★★</b></div>
+        <div class="r-row"><span>卫生</span><b>★★☆☆☆</b></div>
+        <div class="r-row"><span>配合度</span><b>★★☆☆☆</b></div>
+        <div class="r-row bad"><span>时长</span><b>11 秒</b></div>
+        <div class="r-row bad"><span>砍价</span><b>从 300 砍到 200，砍了 40 分钟</b></div>
+        <hr class="r-hr">
+        <div class="r-total"><span>综合评分</span><b>2.4 / 10</b></div>
+        <hr class="r-hr">
+        <div class="r-foot">
+          备注：<b>人很客气，就是太快了。</b><br>
+          建议下次带点药再来。
+        </div>
+      </div>
+
+      <aside class="side-note rev">
+        <div class="sn-title">黑 名 单 备 注</div>
+        <p>该客户三个月内到访 <b>17 次</b>，每次都在凌晨三点后。</p>
+        <p>每次都要求「一样的」，每次都坚持现金，<b>每次都问能不能开发票</b>。</p>
+        <p>有一次被认出来，硬塞了 50 块钱要求保密，<b>转头整个店都知道了</b>。</p>
+        <p>最离谱的是：他一边等，一边在群里喊「兄弟们，起床战争来一把」。</p>
+        <hr class="r-hr">
+        <div class="r-foot" style="text-align:left">
+          本店结论：<br>
+          打游戏 11 秒，办正事也 11 秒，<br>
+          <b style="color:var(--red)">这人是真的全面拉胯。</b>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 历史地位 -->
+  <section>
+    <div class="head rev">
+      <span class="idx">07 /</span>
+      <h2>历史地位</h2>
+      <p>同期生评比 · 参照系十分荒谬</p>
+    </div>
+
+    <div class="ledger">
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">汪精卫</span><span class="en">Surrender Main</span><span class="tag">满分</span></div>
+        <div class="lnum">100<small>叛变</small></div>
+        <div class="lsub">全场第一个点投降的，<b>还顺手把整支队友一起卖了</b>。画主席的投降键，据说是跟他学的。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">蒋介石</span><span class="en">Strategic Retreat</span><span class="tag">老牌</span></div>
+        <div class="lnum">96<small>转进</small></div>
+        <div class="lsub">地图上一路小跑，最后跑到岛上，<b>从此再没出过门</b>。跟画主席「先把床围起来」是同一个流派。</div>
+      </div>
+      <div class="lrow rev">
+        <div class="lname"><span class="cn">画师（画主席）</span><span class="en">Spawn &amp; Dead</span><span class="tag">垫底</span></div>
+        <div class="lnum">3<small>综合</small></div>
+        <div class="lsub">连投降都没赶上，<b>开局 11 秒就没了</b>。汪先生看了都嫌快，蒋校长看了都说：这我不用跑。</div>
+      </div>
+    </div>
+
+    <div class="team-wrap">
+    <div class="team-card rev">
+      <div class="t-title">组 队 邀 请 · 历 史 级 别</div>
+      <div class="t-sub">队名已定：协同送头 · 一致对外</div>
+      <hr class="r-hr">
+      <div class="r-row"><span>指挥</span><b>蒋 · 战略转进</b></div>
+      <div class="r-row"><span>后勤</span><b>汪 · 专管投降</b></div>
+      <div class="r-row"><span>人肉盾</span><b>画 · 负责先死</b></div>
+      <div class="r-row bad"><span>战术</span><b>不抵抗 + 投降 + 掉线</b></div>
+      <div class="r-row bad"><span>预计时长</span><b>11 秒</b></div>
+      <hr class="r-hr">
+      <div class="r-total"><span>全队胜率</span><b>0.0%</b></div>
+      <hr class="r-hr">
+      <div class="r-foot">
+        三人里两个叛变，一个送头<br>
+        <b>—— 历史首次全队被判负 ——</b>
+      </div>
+    </div>
+
+    <aside class="side-note rev">
+      <div class="sn-title">评 分 说 明</div>
+      <p>满分 100，评价维度只有一项：<b>关键时刻跑得多快</b>。</p>
+      <p>汪先生开局就点了投降，还替全队签了字，历史最高分。</p>
+      <p>蒋校长战略转进到岛上，此后几十年再没回来过，稳居第二。</p>
+      <p>画主席两项都没赶上——他死得太快，<b>来不及投降，也来不及跑</b>。</p>
+      <hr class="r-hr">
+      <div class="r-foot" style="text-align:left">
+        三人凑一桌，牌都打不齐：<br>
+        两个想跑，一个已经躺下。
+      </div>
+    </aside>
+    </div>
+  </section>
+
+  <!-- 语录 -->
+  <section>
+    <div class="head rev">
+      <span class="idx">08 /</span>
+      <h2>主席语录</h2>
+      <p>原声收录 · 未剪辑</p>
+    </div>
+    <div class="quotes">
+      <div class="q rev"><q>我先把床围起来。</q><span>围了 40 分钟，一次没出过家。</span></div>
+      <div class="q rev"><q>这波我上。</q><span>0.4 秒后回到出生点。</span></div>
+      <div class="q rev"><q>多少钱？</q><span>画主席对任何事物都习惯先问价，包括队友的救援。</span></div>
+      <div class="q rev"><q>队友呢？</q><span>队友在挖他的床。</span></div>
+      <div class="q rev"><q>我这叫节奏，你们不懂。</q><span>被人按在地上摩擦的节奏。</span></div>
+      <div class="q rev"><q>画主席说了算。</q><span>主席的决策：全队一起送。</span></div>
+      <div class="q rev"><q>我这是战略转移。</q><span>转移了 11 秒，转移到出生点。</span></div>
+      <div class="q rev"><q>三缺一，来不来？</q><span>他组的历史车队：两个叛变，一个掉线。</span></div>
+      <div class="q rev"><q>我这不叫射不准，叫火力压制。</q><span>十箭九空，唯一命中的那箭插在自己脚上。</span></div>
+      <div class="q rev"><q>先别急，我脱个衣服。</q><span>开播必脱，理由是「手感会好」，实战 11 秒。</span></div>
+      <div class="q rev"><q>我硬了。</q><span>指手速。他只硬这个，别的都不硬。</span></div>
+      <div class="q rev"><q>200 块钱，包你满意。</q><span>这是他唯一的商务报价，跟打游戏无关。</span></div>
+    </div>
+  </section>
+
+  <!-- 弹幕 -->
+  <section id="wall">
+    <div class="head rev">
+      <span class="idx">09 /</span>
+      <h2>弹幕墙</h2>
+      <p>实时滚动 · 3 位真实观众倾情奉献</p>
+    </div>
+    <div class="wall rev" id="wallbox"></div>
+  </section>
+
+  <div class="outro">
+    <h2 class="rev">三年了，<span>他还在床上</span></h2>
+    <p class="sub rev">
+      不是躺在床上，是死在自己的床上。<br>
+      至于别人的床 —— <b>那个要收费，一次 200。</b>
+    </p>
+    <div class="btns rev">
+      <button class="btn primary" id="btn-boost"><span>催更：让他上王者</span></button>
+      <button class="btn" id="btn-pay"><span>打赏 ¥200 · 指定服务</span></button>
+    </div>
+  </div>
+
+</main>
+
+<div class="lb" id="lb">
+  <button class="lb-close" aria-label="关闭">×</button>
+  <figure>
+    <img id="lb-img" src="" alt="">
+    <figcaption id="lb-cap"></figcaption>
+  </figure>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STATIC = /[?&]static=1\b/.test(location.search);
+
+  /* ================= G2 连续曲率超椭圆路径 =================
+     rho(φ) = r / (|cosφ|^n + |sinφ|^n)^(1/n)   n=4 → squircle
+     四角各扫 90°，四条直边连接 → 曲率 0 处平滑接入，无跳变 */
+  function squirclePath(w, h, r, n, steps){
+    n = n || 4; steps = steps || 20;
+    r = Math.min(r, w / 2, h / 2);
+    function arc(cx, cy, from, to){
+      var pts = [], i, ph, c, s, rho;
+      for (i = 0; i <= steps; i++){
+        ph = from + (to - from) * (i / steps);
+        c = Math.abs(Math.cos(ph));
+        s = Math.abs(Math.sin(ph));
+        rho = r / Math.pow(Math.pow(c, n) + Math.pow(s, n), 1 / n);
+        pts.push([cx + rho * Math.cos(ph), cy + rho * Math.sin(ph)]);
+      }
+      return pts;
+    }
+    var p = []
+      .concat(arc(r, r, Math.PI, Math.PI * 1.5))          // 左上
+      .concat(arc(w - r, r, Math.PI * 1.5, Math.PI * 2))  // 右上
+      .concat(arc(w - r, h - r, 0, Math.PI * 0.5))        // 右下
+      .concat(arc(r, h - r, Math.PI * 0.5, Math.PI));     // 左下
+    var d = "M " + p.map(function(q){
+      return q[0].toFixed(2) + " " + q[1].toFixed(2);
+    }).join(" L ") + " Z";
+    return 'path("' + d + '")';
+  }
+
+  function shapeButtons(){
+    var btns = document.querySelectorAll(".btn");
+    for (var i = 0; i < btns.length; i++){
+      var btn = btns[i];
+      var w = btn.offsetWidth, h = btn.offsetHeight;
+      if (!w || !h) continue;
+      btn.style.clipPath = squirclePath(w, h, h / 2, 4, 22);
+      var inner = btn.querySelector("span");
+      if (inner){
+        var iw = inner.offsetWidth, ih = inner.offsetHeight;
+        if (iw && ih) inner.style.clipPath = squirclePath(iw, ih, ih / 2, 4, 22);
+      }
+    }
+  }
+  shapeButtons();
+  window.addEventListener("resize", function(){
+    clearTimeout(window.__sqT);
+    window.__sqT = setTimeout(shapeButtons, 140);
+  });
+
+  /* ================= 弹簧交互引擎 =================
+     所有可 hover 元素共用一个物理步进：
+     - 进场时用欠阻尼弹簧（会过冲一下，像手推了一下）
+     - 移开时用阻尼回弹（不会硬停）
+     - 任何时刻再次进入，直接从当前速度/位置续算 → 天然可打断
+     - 并行：每个元素独立一条弹簧，同时跑互不影响        */
+  var spring = (function(){
+    var items = [];
+    var raf = 0;
+    var STIFF = 0.115, DAMP = 0.78;   // 欠阻尼：略过冲
+
+    function step(){
+      var active = 0;
+      for (var i = 0; i < items.length; i++){
+        var it = items[i];
+        var d = it.target - it.v;
+        it.sp += d * STIFF;
+        it.sp *= DAMP;
+        it.v += it.sp;
+        if (Math.abs(d) < 0.0012 && Math.abs(it.sp) < 0.0012){
+          it.v = it.target; it.sp = 0;
+        } else {
+          active++;
+        }
+        it.el.style.setProperty("--sh", it.v.toFixed(4));
+        if (it.onMove) it.onMove(it.v);
+      }
+      raf = active ? requestAnimationFrame(step) : 0;
+    }
+    function kick(){
+      if (!raf) raf = requestAnimationFrame(step);
+    }
+    return {
+      add: function(el, opt){
+        opt = opt || {};
+        var it = {
+          el: el, v: 0, sp: 0, target: 0,
+          onMove: opt.onMove || null,
+          tilt: !!opt.tilt
+        };
+        el.style.setProperty("--sh", "0");
+        items.push(it);
+
+        el.addEventListener("pointerenter", function(){
+          it.target = 1; kick();
+        });
+        el.addEventListener("pointerleave", function(){
+          it.target = 0;
+          if (it.tilt) { el.style.setProperty("--mx","0"); el.style.setProperty("--my","0"); }
+          kick();
+        });
+
+        if (it.tilt){
+          el.addEventListener("pointermove", function(e){
+            var r = el.getBoundingClientRect();
+            var mx = (e.clientX - r.left) / r.width * 2 - 1;
+            var my = (e.clientY - r.top) / r.height * 2 - 1;
+            el.style.setProperty("--mx", mx.toFixed(3));
+            el.style.setProperty("--my", my.toFixed(3));
+          });
+        }
+        return it;
+      },
+      refresh: kick
+    };
+  })();
+
+  // 报表行：整行右移 + 红条长出来 + 数字放大
+  Array.prototype.forEach.call(document.querySelectorAll(".lrow"), function(el){
+    spring.add(el);
+  });
+  // 死因条
+  Array.prototype.forEach.call(document.querySelectorAll(".cause"), function(el){
+    spring.add(el);
+  });
+  // 名场面照片
+  Array.prototype.forEach.call(document.querySelectorAll(".snap"), function(el){
+    spring.add(el);
+  });
+  // 语录卡
+  Array.prototype.forEach.call(document.querySelectorAll(".q"), function(el){
+    spring.add(el);
+  });
+  // 作息行
+  Array.prototype.forEach.call(document.querySelectorAll(".srow"), function(el){
+    spring.add(el);
+  });
+  // 头像框：带鼠标跟随倾斜
+  spring.add(document.querySelector(".exhibit"), { tilt: true });
+  // 段位横幅 / 图表卡 / 弹幕墙
+  [".tier", ".chart-wrap", ".wall"].forEach(function(sel){
+    var el = document.querySelector(sel);
+    if (el) spring.add(el);
+  });
+
+  // 按钮：外层弹、内层缩，两条独立弹簧
+  Array.prototype.forEach.call(document.querySelectorAll(".btn"), function(btn){
+    var inner = btn.querySelector("span");
+    var bv = 0, bs = 0, bt = 0, braf = 0;
+    function bstep(){
+      var d = bt - bv;
+      bs += d * 0.14; bs *= 0.72; bv += bs;
+      if (Math.abs(d) < 0.001 && Math.abs(bs) < 0.001){ bv = bt; bs = 0; braf = 0; }
+      else braf = requestAnimationFrame(bstep);
+      btn.style.transform = "translate3d(" + (bv * -1.5).toFixed(2) + "px," +
+        (bv * -2.5).toFixed(2) + "px,0) scale(" + (1 + bv * 0.012).toFixed(4) + ")";
+      if (inner) inner.style.transform = "scale(" + (1 + bv * 0.022).toFixed(4) + ")";
+    }
+    function bkick(){ if (!braf) braf = requestAnimationFrame(bstep); }
+    btn.addEventListener("pointerenter", function(){ bt = 1; bkick(); });
+    btn.addEventListener("pointerleave", function(){ bt = 0; bkick(); });
+    btn.addEventListener("pointerdown", function(){ bt = 1.6; bkick(); });
+    btn.addEventListener("pointerup", function(){ bt = 1; bkick(); });
+  });
+
+  /* ================= 进场 ================= */
+  var revEls = document.querySelectorAll(".rev");
+  var canAnim = !STATIC && "IntersectionObserver" in window &&
+                !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (canAnim){
+    document.documentElement.classList.add("anim");
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
+    revEls.forEach(function(el, i){
+      // 可 hover 的元素不参与 stagger 延迟，否则进场瞬间鼠标刮过去会卡住
+      if (!/(lrow|cause|snap|srow|exhibit)/.test(el.className + " " + el.tagName)) {
+        if (!el.classList.contains("q")) {
+          el.style.transitionDelay = Math.min(i % 5, 4) * 50 + "ms";
+        }
+      }
+      io.observe(el);
+    });
+    setTimeout(function(){
+      revEls.forEach(function(el){
+        if (!el.classList.contains("in") &&
+            el.getBoundingClientRect().top < window.innerHeight){
+          el.classList.add("in");
+        }
+      });
+    }, 1200);
+  }
+
+  /* ================= 数字滚动 ================= */
+  function runTicker(el){
+    var target = parseFloat(el.getAttribute("data-tick")) || 0;
+    var dec = parseInt(el.getAttribute("data-dec") || "0", 10);
+    var fmt = function(v){ return dec > 0 ? v.toFixed(dec) : Math.round(v).toLocaleString("en-US"); };
+    if (STATIC){ el.textContent = fmt(target); return; }
+    var dur = 1200, t0 = null;
+    function step(ts){
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+  var tickEls = document.querySelectorAll("[data-tick]");
+  if (STATIC) tickEls.forEach(runTicker);
+  else if ("IntersectionObserver" in window){
+    var tio = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting){ runTicker(e.target); tio.unobserve(e.target); }
+      });
+    }, { threshold: 0.6 });
+    tickEls.forEach(function(el){ tio.observe(el); });
+  } else tickEls.forEach(runTicker);
+
+  /* ================= 死因条 ================= */
+  var bars = document.querySelectorAll(".track i");
+  if (STATIC){
+    bars.forEach(function(b){
+      b.style.transition = "none";
+      b.style.width = (b.getAttribute("data-w") || 0) + "%";
+    });
+  } else if ("IntersectionObserver" in window){
+    var bio = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting){
+          var w = e.target.getAttribute("data-w") || "0";
+          setTimeout(function(){ e.target.style.width = w + "%"; }, 100);
+          bio.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    bars.forEach(function(b){ bio.observe(b); });
+  } else {
+    bars.forEach(function(b){ b.style.width = (b.getAttribute("data-w") || 0) + "%"; });
+  }
+
+  /* ================= 柱状图 ================= */
+  var cv = document.getElementById("cv");
+  var data = [8, 14, 6, 9, 22, 5, 3];
+  var labels = ["第1局","第2局","第3局","第4局","第5局","第6局","第7局"];
+  var YMAX = 240;
+
+  function drawChart(){
+    if (!cv) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = cv.clientWidth, h = cv.clientHeight;
+    cv.width = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+    var c = cv.getContext("2d");
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+
+    var padL = 46, padR = 12, padT = 22, padB = 32;
+    var iw = w - padL - padR, ih = h - padT - padB;
+
+    c.font = "11px ui-monospace, Consolas, monospace";
+    c.textBaseline = "middle";
+
+    for (var i = 0; i <= 4; i++){
+      var gv = YMAX * i / 4;
+      var gy = padT + ih - (gv / YMAX) * ih;
+      c.strokeStyle = "rgba(23,19,14,.12)";
+      c.lineWidth = 1;
+      c.beginPath(); c.moveTo(padL, gy + .5); c.lineTo(w - padR, gy + .5); c.stroke();
+      c.fillStyle = "rgba(139,124,102,.95)";
+      c.textAlign = "right";
+      c.fillText(String(gv), padL - 10, gy);
+    }
+
+    // 全服平均
+    c.strokeStyle = "#17130E";
+    c.lineWidth = 2.5;
+    c.beginPath(); c.moveTo(padL, padT + 1.5); c.lineTo(w - padR, padT + 1.5); c.stroke();
+    c.fillStyle = "#17130E";
+    c.textAlign = "left";
+    c.font = "700 11px ui-monospace, Consolas, monospace";
+    c.fillText("全服平均 240s", padL + 10, padT + 16);
+
+    var slot = iw / data.length;
+    var bw = Math.min(slot * 0.5, 44);
+    data.forEach(function(v, idx){
+      var x = padL + slot * idx + slot / 2 - bw / 2;
+      var bh = Math.max((v / YMAX) * ih, 4);
+      var y = padT + ih - bh;
+
+      c.fillStyle = "#BF2E23";
+      c.beginPath();
+      if (c.roundRect) c.roundRect(x, y, bw, bh, 3); else c.rect(x, y, bw, bh);
+      c.fill();
+
+      c.fillStyle = "#17130E";
+      c.textAlign = "center";
+      c.font = "700 12px ui-monospace, Consolas, monospace";
+      c.fillText(v + "s", x + bw / 2, y - 12);
+
+      c.fillStyle = "rgba(139,124,102,.95)";
+      c.font = "11px ui-monospace, Consolas, monospace";
+      c.fillText(labels[idx], x + bw / 2, padT + ih + 18);
+    });
+  }
+  drawChart();
+  window.addEventListener("resize", function(){
+    clearTimeout(window.__cvT);
+    window.__cvT = setTimeout(drawChart, 150);
+  });
+
+  /* ================= 弹幕 ================= */
+  var box = document.getElementById("wallbox");
+  var msgs = [
+    ["主播这手速，脱裤子都没这么快", "hot"],
+    ["3 人在看：2 个小号 + 1 个讨债的", "cool"],
+    ["床：我先走一步，你保重", "hot"],
+    ["落地成盒，名副其实", "hot"],
+    ["菜就多练，别搁这碰瓷了 😏", ""],
+    ["画主席今晚还去吗", "hot"],
+    ["对面哭着说谢谢主播送温暖", ""],
+    ["9 把木剑，一把没用出去", ""],
+    ["凌晨四点二十到账，收到请回答", "cool"],
+    ["200 块钱能买多少把木剑", "hot"],
+    ["室友：能不能别半夜喊别挖我床", ""],
+    ["这死亡速度破了服务器记录", "hot"],
+    ["礼物榜第一是他自己", "cool"],
+    ["画主席的战术叫：全家桶式送头", ""],
+    ["三年了，他还在床上", "cool"],
+    ["这一局不算，他卡了", ""],
+    ["床的守墓人，名不虚传", ""],
+    ["建议改名叫画板，还能当拖把用", "hot"],
+    ["封口费 50，收得挺快", "cool"],
+    ["别骂了，主席在巷子里办正事", "hot"],
+    ["200 块求对面放过，对面收了钱照样杀", "hot"],
+    ["这战绩，建议直接挂闲鱼卖了", ""],
+    ["画主席的投降键是跟汪先生学的", "hot"],
+    ["蒋校长战略转进，画主席原地转圈", "cool"],
+    ["历史三人组：两个叛变一个送头", "hot"],
+    ["队名都想好了：协同送头", "cool"],
+    ["开播先脱衣服，这直播我留了备份", "hot"],
+    ["11 秒，比我洗澡还快", "hot"],
+    ["主席，你键盘上那层油能刮下来炒菜", "cool"],
+    ["凌晨四点半回出租屋，洗澡洗了四十分钟", "hot"],
+    ["说「啊？」的次数比杀的人多", "cool"],
+    ["200 的套餐含不含开发票", "hot"]
+  ];
+  function spawnDanmaku(){
+    if (!box) return;
+    var frag = document.createDocumentFragment();
+    msgs.forEach(function(m){
+      var el = document.createElement("span");
+      el.className = "dm " + m[1];
+      el.textContent = m[0];
+      el.style.top = (6 + Math.random() * 82) + "%";
+      var dur = 15 + Math.random() * 13;
+      el.style.animationDuration = dur + "s";
+      el.style.animationDelay = (-Math.random() * dur) + "s";
+      el.style.fontSize = (13 + Math.random() * 4.5) + "px";
+      el.style.opacity = 0.6 + Math.random() * 0.4;
+      frag.appendChild(el);
+    });
+    box.appendChild(frag);
+  }
+  spawnDanmaku();
+
+  /* ================= Lightbox ================= */
+  var lb = document.getElementById("lb");
+  var lbImg = document.getElementById("lb-img");
+  var lbCap = document.getElementById("lb-cap");
+  var snaps = document.querySelectorAll(".snap");
+  Array.prototype.forEach.call(snaps, function(fig){
+    fig.addEventListener("click", function(){
+      var img = fig.querySelector("img");
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = fig.getAttribute("data-cap") || img.alt;
+      lb.classList.add("on");
+    });
+  });
+  function closeLb(){ lb.classList.remove("on"); }
+  lb.addEventListener("click", function(e){
+    if (e.target === lb || e.target.classList.contains("lb-close")) closeLb();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") closeLb();
+  });
+
+  /* ================= Toast ================= */
+  var toastEl = document.getElementById("toast");
+  var tTimer;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("on");
+    clearTimeout(tTimer);
+    tTimer = setTimeout(function(){ toastEl.classList.remove("on"); }, 2800);
+  }
+  var boost = [
+    "已催更：主席回了一句「明天一定」。",
+    "已催更：系统提示该主播正在巷子里，请稍后再试。",
+    "已催更：主播表示床是他家，不走。",
+    "已催更：战力 +0，自信 +9999。",
+    "已催更：对面玩家表示感谢你的支持。"
+  ];
+  var pay = [
+    "打赏已到账 ¥200，服务内容保密。",
+    "打赏已到账：主席说今晚就剩这一单了。",
+    "打赏成功：附赠封口费 ¥50，请勿外传。",
+    "打赏失败：该账户已被三个小号透支。"
+  ];
+  var bi = 0, pi = 0;
+  document.getElementById("btn-boost").addEventListener("click", function(){
+    toast(boost[bi++ % boost.length]);
+  });
+  document.getElementById("btn-pay").addEventListener("click", function(){
+    toast(pay[pi++ % pay.length]);
+  });
+})();
+</script>
+</body>
+</html>
